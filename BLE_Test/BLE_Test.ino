@@ -1,36 +1,42 @@
 #include <SoftwareSerial.h>
 
-SoftwareSerial mySerial(10, 11); // RX, TX
-
+SoftwareSerial mySerial(9, 8); // RX, TX
+int val = 255;
 void setup() 
 {
-    pinMode(10, INPUT);
-    pinMode(11, OUTPUT);
+    pinMode(9, INPUT);
+    pinMode(8, OUTPUT);
     
-    pinMode(7, INPUT);
-    pinMode(13, OUTPUT);
+    pinMode(2, INPUT);
+    pinMode(3, OUTPUT);
     mySerial.begin(9600);
-    delay(2000);
+    delay(500);
     mySerial.write("CENT=OFF");
     mySerial.write("\r");
 }
 
 void loop() 
 {
- char last = 0;
- 
- if(digitalRead(7) == HIGH)
+ digitalWrite(3,LOW);
+ OSCCAL=val;
+ if(digitalRead(2) == HIGH)
  {
     mySerial.write("ADV ON");
     mySerial.write("\r");
-    digitalWrite(13, HIGH);
-    delay(2000);
+ //   digitalWrite(3, HIGH);
+    delay(50);
  }
- else if(digitalRead(7) == LOW)
+ else
  {
    mySerial.write("ADV OFF");
    mySerial.write("\r");
-   digitalWrite(13,LOW);
-   delay(2000);
+   //digitalWrite(3,LOW);
+   delay(50);
  }
+ 
+ while(val == 0)
+ {
+   digitalWrite(3,HIGH);
+ }
+ val--;
 }
