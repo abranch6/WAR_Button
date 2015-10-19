@@ -6,10 +6,10 @@
 
 #include <SoftwareSerialWAR.h> //does not use ISR(PCINT1) {}
 
-#define BLE_WAKE (8)
+#define BLE_WAKE (7)
 #define LED (3)
 
-SoftwareSerial mySerial(10, 9); // RX, TX
+SoftwareSerial mySerial(8, 9); // RX, TX
 
 void setup() 
 {
