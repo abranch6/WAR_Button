@@ -45,7 +45,7 @@ void setupBLE(void)
   mySerial.write("\r");
   delay(100);
   
-  mySerial.write("SET LEDS=OFF");
+  mySerial.write("SET LEDS=ON");
   mySerial.write("\r");
   delay(100);
   
@@ -57,7 +57,7 @@ void setupBLE(void)
   mySerial.write("\r");
   delay(100);
   
-  mySerial.write("SET SLEEP=ON");
+  mySerial.write("SET SLEEP=OFF");
   mySerial.write("\r");
   delay(100);
   
@@ -105,6 +105,10 @@ void sleep(void)
    
   digitalWrite(LED, LOW); //Turn off LED
   digitalWrite(BLE_WAKE, LOW); //Sleep BLE
+  
+  mySerial.write("DMT");
+  mySerial.write("\r");
+  delay(100);
    
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
   sleep_enable();
@@ -124,11 +128,8 @@ ISR(PCINT1_vect)
   
   digitalWrite(LED, HIGH); //Turn on LED
   digitalWrite(BLE_WAKE, HIGH); //Wake BLE
-  delay(100); 
-  mySerial.write("ERR");
-  mySerial.write("\r");
+  delay(100);
   
- // mySerial.write("ADV ON");
-//  mySerial.write("\r");
- // delay(100);
+ // mySerial.write("ERR");
+ // mySerial.write("\r");
 }
