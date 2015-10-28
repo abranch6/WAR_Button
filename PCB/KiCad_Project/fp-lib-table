@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name bc118)(type KiCad)(uri "$(KIPRJMOD)\\libs\\bc118.pretty")(options "")(descr ""))
+  (lib (name war_power)(type KiCad)(uri "$(KIPRJMOD)\\libs\\war_power.pretty")(options "")(descr ""))
+)
