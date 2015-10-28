@@ -30,6 +30,8 @@ void setup()
   
   setupBLE();
   
+  digitalWrite(LED, LOW);
+  
   cli();
   GIMSK |= B00100000; //enable PCINT11:8 interrupts
   sei();
@@ -93,17 +95,13 @@ void loop()
 }
 
 void sleep(void)
-{
- // mySerial.write("ADV OFF");
- // mySerial.write("\r");
- // delay(100);
-  
+{ 
   cli();
   PCMSK1 |= B00000001; //enbale PCINT8
   sei();
   ADCSRA &= ~(1<<ADEN); //disable ADC
    
-  digitalWrite(LED, LOW); //Turn off LED
+  //digitalWrite(:LED LOW); //LED
   digitalWrite(BLE_WAKE, LOW); //Sleep BLE
   
   mySerial.write("DMT");
@@ -126,10 +124,7 @@ ISR(PCINT1_vect)
   sei();
   ADCSRA |= (1<<ADEN); //enable ADC
   
-  digitalWrite(LED, HIGH); //Turn on LED
+//  digitalWrite(LED, HIGH); //Turn on LED
   digitalWrite(BLE_WAKE, HIGH); //Wake BLE
   delay(100);
-  
- // mySerial.write("ERR");
- // mySerial.write("\r");
 }
