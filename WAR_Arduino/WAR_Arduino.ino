@@ -6,10 +6,10 @@
 
 #include <SoftwareSerialWAR.h> //does not use ISR(PCINT1) {}
 
-#define BLE_WAKE (8)
+#define BLE_WAKE (7)
 #define LED (3)
 
-SoftwareSerial mySerial(10, 9); // RX, TX
+SoftwareSerial mySerial(8, 9); // RX, TX
 
 void setup() 
 {
@@ -30,6 +30,8 @@ void setup()
   
   setupBLE();
   
+  digitalWrite(LED, LOW);
+  
   cli();
   GIMSK |= B00100000; //enable PCINT11:8 interrupts
   sei();
@@ -45,7 +47,7 @@ void setupBLE(void)
   mySerial.write("\r");
   delay(100);
   
-  mySerial.write("SET LEDS=OFF");
+  mySerial.write("SET LEDS=ON");
   mySerial.write("\r");
   delay(100);
   
@@ -57,7 +59,7 @@ void setupBLE(void)
   mySerial.write("\r");
   delay(100);
   
-  mySerial.write("SET SLEEP=ON");
+  mySerial.write("SET SLEEP=OFF");
   mySerial.write("\r");
   delay(100);
   
@@ -93,18 +95,18 @@ void loop()
 }
 
 void sleep(void)
-{
- // mySerial.write("ADV OFF");
- // mySerial.write("\r");
- // delay(100);
-  
+{ 
   cli();
   PCMSK1 |= B00000001; //enbale PCINT8
   sei();
   ADCSRA &= ~(1<<ADEN); //disable ADC
    
-  digitalWrite(LED, LOW); //Turn off LED
+  //digitalWrite(:LED LOW); //LED
   digitalWrite(BLE_WAKE, LOW); //Sleep BLE
+  
+  mySerial.write("DMT");
+  mySerial.write("\r");
+  delay(100);
    
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
   sleep_enable();
@@ -122,13 +124,7 @@ ISR(PCINT1_vect)
   sei();
   ADCSRA |= (1<<ADEN); //enable ADC
   
-  digitalWrite(LED, HIGH); //Turn on LED
+//  digitalWrite(LED, HIGH); //Turn on LED
   digitalWrite(BLE_WAKE, HIGH); //Wake BLE
-  delay(100); 
-  mySerial.write("ERR");
-  mySerial.write("\r");
-  
- // mySerial.write("ADV ON");
-//  mySerial.write("\r");
- // delay(100);
+  delay(100);
 }
