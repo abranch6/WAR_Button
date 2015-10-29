@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:WAR_Button-rescue
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -46,23 +47,12 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L ATTINY84A-MM IC1
-U 1 1 560D4AAC
-P 2100 3900
-F 0 "IC1" H 1250 4650 40  0000 C CNN
-F 1 "ATTINY84A-MM" H 2750 3150 40  0000 C CNN
-F 2 "VQFN20" H 2100 3700 35  0000 C CIN
-F 3 "" H 2100 3900 60  0000 C CNN
-	1    2100 3900
-	1    0    0    -1  
-$EndComp
-$Comp
 L BC118 BLE1
 U 1 1 560D65FC
 P 9900 4200
 F 0 "BLE1" H 9650 5300 60  0000 C CNN
 F 1 "BC118" H 9650 5400 60  0000 C CNN
-F 2 "" H 9650 5400 60  0001 C CNN
+F 2 "bc118:bc118" H 9650 5400 60  0001 C CNN
 F 3 "" H 9650 5400 60  0000 C CNN
 	1    9900 4200
 	1    0    0    -1  
@@ -139,7 +129,7 @@ U 1 1 560D7FE8
 P 3900 4200
 F 0 "SW1" H 4050 4310 50  0000 C CNN
 F 1 "SW_PUSH" H 3900 4120 50  0000 C CNN
-F 2 "" H 3900 4200 60  0001 C CNN
+F 2 "Buttons_Switches_ThroughHole:SW_PUSH-12mm" H 3900 4200 60  0001 C CNN
 F 3 "" H 3900 4200 60  0000 C CNN
 	1    3900 4200
 	1    0    0    -1  
@@ -150,7 +140,7 @@ U 1 1 560D9989
 P 6350 3900
 F 0 "BT1" H 6450 3950 50  0000 L CNN
 F 1 "Battery" H 6450 3850 50  0000 L CNN
-F 2 "" V 6350 3940 60  0001 C CNN
+F 2 "war_power:20MM_COIN_CELL_SMD" V 6350 3940 60  0001 C CNN
 F 3 "" V 6350 3940 60  0000 C CNN
 	1    6350 3900
 	1    0    0    -1  
@@ -249,35 +239,18 @@ Text GLabel 3550 3600 2    60   Input ~ 0
 WAKE
 Text GLabel 10750 4850 2    60   Input ~ 0
 WAKE
-Text GLabel 2850 1950 3    60   Input ~ 0
+Text GLabel 2900 2350 0    60   Input ~ 0
 P1
-Text GLabel 2950 1950 3    60   Input ~ 0
+Text GLabel 2900 2250 0    60   Input ~ 0
 P2
-Text GLabel 3050 1950 3    60   Input ~ 0
+Text GLabel 3400 2350 2    60   Input ~ 0
 P3
-Text GLabel 3150 1950 3    60   Input ~ 0
+Text GLabel 2900 2450 0    60   Input ~ 0
 P4
-$Comp
-L CONN_01X06 P1
-U 1 1 561F3005
-P 2900 1750
-F 0 "P1" H 2900 2100 50  0000 C CNN
-F 1 "CONN_01X06" V 3000 1750 50  0000 C CNN
-F 2 "" H 2900 1750 60  0001 C CNN
-F 3 "" H 2900 1750 60  0000 C CNN
-	1    2900 1750
-	0    -1   -1   0   
-$EndComp
-Text GLabel 2600 2250 3    60   Input ~ 0
+Text GLabel 3400 2250 2    60   Input ~ 0
 PROG_VIN
-Text GLabel 2750 2250 3    60   Input ~ 0
+Text GLabel 3400 2450 2    60   Input ~ 0
 PROG_GND
-Wire Wire Line
-	2750 1950 2750 2250
-Wire Wire Line
-	2600 2250 2600 1950
-Wire Wire Line
-	2600 1950 2650 1950
 Text GLabel 6100 4100 3    60   Input ~ 0
 PROG_GND
 Wire Wire Line
@@ -389,7 +362,7 @@ U 1 1 56304568
 P 4750 4300
 F 0 "SW2" H 4900 4410 50  0000 C CNN
 F 1 "SW_PUSH" H 4750 4220 50  0000 C CNN
-F 2 "" H 4750 4300 60  0001 C CNN
+F 2 "Buttons_Switches_ThroughHole:SW_PUSH-12mm" H 4750 4300 60  0001 C CNN
 F 3 "" H 4750 4300 60  0000 C CNN
 	1    4750 4300
 	1    0    0    -1  
@@ -406,4 +379,31 @@ Wire Wire Line
 	3700 4350 3700 4300
 Wire Wire Line
 	3700 4300 3150 4300
+$Comp
+L ATTINY84A-M-RESCUE-WAR_Button IC1
+U 1 1 56304DEF
+P 2100 3900
+F 0 "IC1" H 1250 4650 40  0000 C CNN
+F 1 "ATTINY84A-M" H 2800 3150 40  0000 C CNN
+F 2 "war_ic:qfn20" H 2100 3700 35  0000 C CIN
+F 3 "" H 2100 3900 60  0000 C CNN
+	1    2100 3900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1000 4400 900  4400
+Wire Wire Line
+	900  4400 900  4500
+Connection ~ 900  4500
+$Comp
+L CONN_02X03 P2
+U 1 1 56305C78
+P 3150 2350
+F 0 "P2" H 3150 2550 50  0000 C CNN
+F 1 "CONN_02X03" H 3150 2150 50  0000 C CNN
+F 2 "" H 3150 1150 60  0000 C CNN
+F 3 "" H 3150 1150 60  0000 C CNN
+	1    3150 2350
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
