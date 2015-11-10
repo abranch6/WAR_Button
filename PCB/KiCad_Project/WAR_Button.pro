@@ -1,4 +1,4 @@
-update=Wed 28 Oct 2015 12:41:26 AM EDT
+update=Sat 07 Nov 2015 06:46:58 PM EST
 version=1
 last_client=kicad
 [pcbnew]
@@ -61,3 +61,4 @@ LibName29=contrib
 LibName30=valves
 LibName31=libs/bc118
 LibName32=libs/attiny
+LibName33=libs/war_power
