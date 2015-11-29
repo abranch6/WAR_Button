@@ -11,13 +11,16 @@
 
 #define BUFFER_SIZE (100)
 #define READ_TIMEOUT (2000)
+#define PAIR_TIMEOUT (60000)
+#define BUTTON_TIMEOUT (600000)
+
 
 #define WAIT (0)
 #define PAIR (1)
 #define BUTTON_PRESS (2)
 
 
-SoftwareSerial mySerial(PCINT2, PCINT1); // RX, TX
+SoftwareSerial mySerial(8, 9); // RX, TX
 
 char ble_buffer[BUFFER_SIZE];
 char newChar;
@@ -27,6 +30,7 @@ char bleConnected;
   
 int mode;
 
+long wakeTime;
 void setup() 
 {
   
@@ -128,10 +132,18 @@ void loop()
   //call function based on which button is pressed
   if(mode == PAIR)
   {
+    if(millis() - wakeTime > PAIR_TIMEOUT)
+    {
+      sleep();
+    }
     rearButtonPressed();
   }
   else if(mode == BUTTON_PRESS)
   {
+    if(millis() - wakeTime > BUTTON_TIMEOUT)
+    {
+      sleep();
+    }
     frontButtonPressed();
   }
 }
@@ -259,6 +271,7 @@ void sleep(void)
   while(digitalRead(PCINT8) == LOW);
   while(digitalRead(PCINT9) == LOW);
   delay(500);
+  wakeTime = millis();
 }
 
 ISR(PCINT1_vect)
