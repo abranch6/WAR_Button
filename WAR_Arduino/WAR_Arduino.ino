@@ -10,24 +10,31 @@
 #define LED (3)
 
 #define BUFFER_SIZE (100)
+#define READ_TIMEOUT (2000)
 
 #define WAIT (0)
 #define PAIR (1)
 #define BUTTON_PRESS (2)
 
-SoftwareSerial mySerial(8, 9); // RX, TX
+
+SoftwareSerial mySerial(PCINT2, PCINT1); // RX, TX
+
 char ble_buffer[BUFFER_SIZE];
 char newChar;
 char lastChar;
 int bufferLoc;
-char ble_connected;
+char bleConnected;
   
 int mode;
 
 void setup() 
 {
+  
+//  digitalWrite(PCINT1, HIGH);
+//  digitalWrite(PCINT2, HIGH);
+  
   memset(ble_buffer, 0, BUFFER_SIZE / sizeof(ble_buffer[0]));
-  ble_connected = 0;
+  bleConnected = 0;
   
   mode = WAIT;
   
@@ -41,7 +48,7 @@ void setup()
   digitalWrite(PCINT9, HIGH); //enable pull-up resistor
   
   pinMode(LED, OUTPUT);  //LED 
-  digitalWrite(LED, LOW); 
+  digitalWrite(LED, HIGH); 
   setupBLE();
   
   cli();
@@ -55,6 +62,7 @@ void setupBLE(void)
   
   mySerial.begin(9600);
 
+  //set all variables on the BLE module
   mySerial.write("SET LNAME=WAR BUTTON\0");
   mySerial.write("\r");
   delay(100);
@@ -107,126 +115,155 @@ void setupBLE(void)
 
 void loop() 
 {
-  char lineEnd = 0;
-  while(mySerial.available() > 0 && lineEnd == 0)
-  {
-    lastChar = newChar;
-    newChar = mySerial.read();
-    
-    ble_buffer[bufferLoc] = newChar;
-    bufferLoc++;
-    
-    if(newChar == '\r' && lastChar == '\n')
-    {
-      lineEnd = 1;
-    }
-  }
   
-  if(lineEnd)
+  //wait for BLE to connect to phone
+  //TODO: add timeout
+  readBLE();
+  if(bufferLoc >= 6 && memcmp(ble_buffer, "CON=OK", 6) == 0)
   {
-    newChar = 0;
-    lastChar = -1;
-    
-    if(bufferLoc >= 6 && memcmp(ble_buffer, "CON=OK", 6) == 0)
-    {
-      ble_connected = 1;
+    bleConnected = 1;
      
-    }
-    
-    bufferLoc = 0;
-    lineEnd = 0;
   }
   
-  
-  
-  if(ble_connected == 1)
+  //call function based on which button is pressed
+  if(mode == PAIR)
+  {
+    rearButtonPressed();
+  }
+  else if(mode == BUTTON_PRESS)
+  {
+    frontButtonPressed();
+  }
+}
+
+//TODO: add timeout
+void frontButtonPressed(void) //called if the front button on the device is pressed
+{
+  if(bleConnected == 1)
   {
     int wait_time = 1000;
     char ack_recieved = 0;
     
-    bufferLoc = 0;
     mySerial.flush();
     digitalWrite(LED, HIGH);
     
-    while(ack_recieved == 0)
+    while(ack_recieved == 0) //resends command until ack is seen
     {
-      if(mode == BUTTON_PRESS)
-      {
-        mySerial.write("SND BUTTON");
-      }
-      else if(mode == PAIR)
-      {
-        mySerial.write("SND PAIR");
-      }
-      
+      //send command
+      mySerial.write("SND BUTTON");
       mySerial.write("\r");
       
       delay(wait_time);
       
-      char lineEnd = 0;
-      while(mySerial.available() > 0 && lineEnd == 0)
+      readBLE();
+
+      if(bufferLoc >= 7 && memcmp(ble_buffer, "RCV=ACK", 7) == 0) //check for ack
       {
-        lastChar = newChar;
-        newChar = mySerial.read();
-        
-        ble_buffer[bufferLoc] = newChar;
-        bufferLoc++;
-        
-        if(newChar == '\r' && lastChar == '\n')
-        {
-          lineEnd = 1;
-        }
-      }
-      
-      if(lineEnd)
-      {
-        newChar = 0;
-        lastChar = -1;
-        
-        if(bufferLoc >= 7 && memcmp(ble_buffer, "RCV=ACK", 7) == 0)
-        {
-          ack_recieved = 1;
-         
-        }
-        bufferLoc = 0;
-        lineEnd = 0;
+        ack_recieved = 1;
+       
       }
     }
     sleep();
   }
+}
+
+//TODO: add timeout
+void rearButtonPressed(void) //called if the rear button on the device is pressed
+{
+  if(bleConnected == 1) //waits for a connection
+  {
+    int wait_time = 1000; //time to wait until check for response
+    char ack_recieved = 0;
+    
+    mySerial.flush();
+    digitalWrite(LED, HIGH);
+    
+    while(ack_recieved == 0) //send message until ack is recieved
+    {
+      mySerial.write("SND PAIR"); 
+      mySerial.write("\r"); //send message
+      
+      delay(wait_time);
+      
+      readBLE(); //read in response, waiting for ack
+
+      if(bufferLoc >= 7 && memcmp(ble_buffer, "RCV=ACK", 7) == 0) //check for ack
+      {
+        ack_recieved = 1;
+      }
+    }
+    sleep();
+  }
+}
+
+void readBLE(void)
+{
+  newChar = 0;
+  lastChar = -1;
   
+  char lineEnd = 0;
+  bufferLoc = 0;
+  
+  long startTime = millis();
+  long endTime = millis();
+  
+  while(endTime - startTime < READ_TIMEOUT && lineEnd == 0) //read until timeout or end of line
+  {
+    if(mySerial.available() > 0) //make sure read is available
+    {
+      lastChar = newChar;
+      newChar = mySerial.read(); //read in char and save previous
+    
+      ble_buffer[bufferLoc] = newChar; //add to buffer
+      bufferLoc++;
+    
+      if(newChar == '\r' && lastChar == '\n') //check for end of line
+      {
+        lineEnd = 1;
+      }
+    }
+    endTime = millis();
+  }
+  
+  if(endTime - startTime >= READ_TIMEOUT) //if timed out buffer is invalid
+  {
+    bufferLoc = 0;
+  }
 }
 
 void sleep(void)
 {
-  
-  
   cli();
   PCMSK1 |= B00000011; //enbale PCINT8
   sei();
   ADCSRA &= ~(1<<ADEN); //disable ADC
    
   mode = WAIT;
-  ble_connected = 0;
+  bleConnected = 0;
   digitalWrite(LED, LOW); //LED
   digitalWrite(BLE_WAKE, LOW); //Sleep BLE
   
-  mySerial.write("DMT");
+  mySerial.write("DMT"); //sleep BLE module
   mySerial.write("\r");
   delay(100);
    
-  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  set_sleep_mode(SLEEP_MODE_PWR_DOWN); //sleep AtTiny84A
   sleep_enable();
   sleep_mode();
-  sleep_disable();
+  
+  sleep_disable(); //continues here on wake up
+ 
+  digitalWrite(LED, HIGH); //LED
   
   //Wait for button to be released
   while(digitalRead(PCINT8) == LOW);
+  while(digitalRead(PCINT9) == LOW);
   delay(500);
 }
 
 ISR(PCINT1_vect)
 { 
+  //set mode based on the button pressed
   if(digitalRead(PCINT8) == LOW)
   {
     mode = BUTTON_PRESS;  
@@ -235,6 +272,7 @@ ISR(PCINT1_vect)
   {
     mode = PAIR;
   }
+  
   cli();
   PCMSK1 &= B11111100; //disable PCINT8
   sei();
@@ -243,5 +281,5 @@ ISR(PCINT1_vect)
   //flush serial port of all data
   mySerial.flush();
   digitalWrite(BLE_WAKE, HIGH); //Wake BLE
-  delay(100);
 }
+
