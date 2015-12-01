@@ -46,7 +46,12 @@
         </activity>
         <activity android:name=".AddNewContactsForm" >
         </activity>
-        <activity android:name=".Contacts" >
+        <activity
+            android:name=".Contacts"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
         <activity android:name=".EditContacts" >
         </activity>
@@ -61,6 +66,11 @@
         <activity
             android:name=".DB_Test"
             android:label="@string/title_activity_db__test"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".PairDevice"
+            android:label="@string/title_activity_pair_device"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
         </activity>
     </application>

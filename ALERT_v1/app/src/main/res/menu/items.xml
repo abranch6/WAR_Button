@@ -2,8 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/Contact"
-        android:icon="@drawable/ic_account_circle_black_24dp"
+    android:id="@+id/Contact"
+    android:icon="@drawable/ic_account_circle_black_24dp"
+    android:title="@string/action_favorite"
+    app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/Notification"
+        android:icon="@drawable/ic_notifications_black_48dp"
+        android:title="@string/action_favorite"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/Pair"
+        android:icon="@drawable/ic_cached_black_48dp"
         android:title="@string/action_favorite"
         app:showAsAction="always"/>
 

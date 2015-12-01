@@ -17,9 +17,10 @@ public class DB_Test extends AppCompatActivity {
          * CRUD Operations
          * */
         // add Contacts
-        db.addContact(new Contact("Aditi Dhar", "123-456-789"));
-        db.addContact(new Contact("Ashwyn", "01298998798"));
-        db.addContact(new Contact("Saheeb", "09929879828"));
+//        db.addContact(new Contact("Aditi Dhar", "123-456-789"));
+//        db.addContact(new Contact("Ashwyn", "01298998798"));
+//        db.addContact(new Contact("Saheeb", "09929879828"));
+        db.addContact(new Contact("Ben Le", "2085300606"));
 
         // get all books
         List<Contact> list = db.getAllContacts();

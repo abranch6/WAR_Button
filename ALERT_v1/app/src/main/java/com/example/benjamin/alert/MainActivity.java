@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,20 +38,28 @@ public class MainActivity extends AppCompatActivity {
 
         boolean flag = true;
 
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+            Intent intlogin = new Intent(this, LoginActivity.class);
+            startActivityForResult(intlogin, 1);
+
+
+//            String value = extras.getString("contactBack");
+//            if (value != "BACK"){
+//
+//            }
+//            Log.d("valuePassed", value);
+
+        }
+
         MySQLiteHelper db = new MySQLiteHelper(this);
 
         List<Contact> contacts = db.getAllContacts();
 
         db.deleteAll(contacts);
 
-        Intent intlogin = new Intent(this, LoginActivity.class);
-        startActivityForResult(intlogin, 1);
-
-        //Intent intent = new Intent(this, AddNewContactsForm.class);
-        //startActivity(intent);
-        //return;
-
-
+//        Intent intlogin = new Intent(this, LoginActivity.class);
+//        startActivityForResult(intlogin, 1);
 
         setContentView(R.layout.activity_main);
         safeHelpButton = (ToggleButton) findViewById(R.id.toggleButton);
@@ -73,6 +82,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    // "Exit" the application
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        return true;
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -231,8 +252,28 @@ public class MainActivity extends AppCompatActivity {
         {
             case R.id.Contact:
                 // select the contact icon
+                // If no contacts saved got to add contacts screen
+                MySQLiteHelper db = new MySQLiteHelper(this);
+                List<Contact> contacts = db.getAllContacts();
+                String[] contactsArray = new String[contacts.size()];
                 Log.d("contact", "contact selected");
+                if (contactsArray.length > 0)
+                {
+                    Intent intent = new Intent(this, Contacts.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Intent intent = new Intent(this, AddContactsLocation.class);
+                    startActivity(intent);
+                }
+
                 return true;
+            case R.id.Pair:
+                // Go to ANDREW Pair Screen
+                Intent intent = new Intent(this, PairDevice.class);
+                startActivity(intent);
+
             default:
                 return super.onOptionsItemSelected(item);
         }

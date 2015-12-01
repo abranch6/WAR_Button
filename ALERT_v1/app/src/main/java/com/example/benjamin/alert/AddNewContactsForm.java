@@ -33,6 +33,7 @@ public class AddNewContactsForm extends AppCompatActivity {
 
         boolean flag = true;
 
+        finish();
         if(flag) {
             Intent intent = new Intent(this, Contacts.class);
             startActivity(intent);

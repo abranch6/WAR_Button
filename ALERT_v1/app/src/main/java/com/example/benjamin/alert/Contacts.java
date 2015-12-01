@@ -3,6 +3,8 @@ package com.example.benjamin.alert;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -36,6 +38,16 @@ public class Contacts extends AppCompatActivity {
 
         contactLists.setAdapter(contactsArrayAdapter);
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("contactBack", "BACK");
+            startActivity(intent);
+        }
+        return true;
     }
 
     public void add(View view)

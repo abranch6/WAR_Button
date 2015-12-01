@@ -17,4 +17,5 @@
     </string>
     <string name="SWear">Swear</string>
     <string name="title_activity_db__test">DB_Test</string>
+    <string name="title_activity_pair_device">PairDevice</string>
 </resources>
