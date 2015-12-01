@@ -23,5 +23,7 @@
              colorControlActivated which is used to tint widgets. -->
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

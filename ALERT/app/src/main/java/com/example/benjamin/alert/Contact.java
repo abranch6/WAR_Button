@@ -1,23 +1,57 @@
 package com.example.benjamin.alert;
 
 /**
- * Created by Benjamin on 11/15/2015.
+ * Created by Dhar on 11/30/15.
  */
 public class Contact {
 
-    private String name, PhoneNumber;
+    private int id;
+    private String name;
+    private String phone;
 
-    public Contact(String name, String PhoneNumber){
+    public Contact(){}
+
+    public Contact(String name, String phone) {
+        super();
         this.name = name;
-        this.PhoneNumber = PhoneNumber;
+        this.phone = phone;
     }
 
-    public String getName(){
-        return name;
+    //getters & setters
+
+    @Override
+    public String toString() {
+        return "Contact [id=" + id + ", name=" + name + ",phone=" + phone
+                + "]";
     }
 
-    public String getPhoneNumber(){
-        return PhoneNumber;
+    public int getId()
+    {
+        return this.id;
     }
 
+    public String getName()
+    {
+        return this.name;
+    }
+
+    public String getPhone()
+    {
+        return this.phone;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
+    }
+
+    public void setName(String name)
+    {
+        this.name  = name;
+    }
+
+    public void setPhone(String phone)
+    {
+        this.phone = phone;
+    }
 }
