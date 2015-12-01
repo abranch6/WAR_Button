@@ -1,4 +1,4 @@
-<resources>
+ <resources>
     <string name="app_name">SWear</string>
     <string name="action_favorite">Contact</string>
     <string name="title_activity_login">Sign in</string>
@@ -16,4 +16,5 @@
         completions."
     </string>
     <string name="SWear">Swear</string>
+    <string name="title_activity_db__test">DB_Test</string>
 </resources>

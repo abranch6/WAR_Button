@@ -3,6 +3,8 @@ package com.example.benjamin.alert;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -19,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -75,7 +78,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                    Log.d("attempt", "login");
                     attemptLogin();
+
+                    // Return intent
+                    Intent retIntent = new Intent();
+                    retIntent.putExtra("loginResult", true);
+                    setResult(Activity.RESULT_OK, retIntent);
+                    Log.d("LogActivity", "testing");
+                    finish();
                     return true;
                 }
                 return false;
@@ -87,6 +98,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
                 attemptLogin();
+
+                // Return intent if Login attempt is successful
+                Intent retIntent = new Intent();
+                retIntent.putExtra("loginResult", "login");
+                setResult(Activity.RESULT_OK, retIntent);
+                Log.d("LogActivity", "testing");
+                finish();
             }
         });
 

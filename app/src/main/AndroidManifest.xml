@@ -58,6 +58,11 @@
         </activity>
         <activity android:name=".contact_safe" >
         </activity>
+        <activity
+            android:name=".DB_Test"
+            android:label="@string/title_activity_db__test"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>

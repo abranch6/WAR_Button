@@ -31,9 +31,11 @@ public class GPS extends Service implements LocationListener {
      */
     public GPS(Context context) {
         this.mContext = context;
+
         Location loc = getLocation();
         lat = loc.getLatitude();
         longg = loc.getLongitude();
+
     }
 
     /**

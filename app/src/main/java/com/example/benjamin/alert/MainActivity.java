@@ -1,5 +1,7 @@
 package com.example.benjamin.alert;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationListener;
@@ -32,6 +34,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        boolean flag = true;
+
+        MySQLiteHelper db = new MySQLiteHelper(this);
+
+        List<Contact> contacts = db.getAllContacts();
+
+        db.deleteAll(contacts);
+
+        Intent intlogin = new Intent(this, LoginActivity.class);
+        startActivityForResult(intlogin, 1);
+
+        //Intent intent = new Intent(this, AddNewContactsForm.class);
+        //startActivity(intent);
+        //return;
+
+
+
         setContentView(R.layout.activity_main);
         safeHelpButton = (ToggleButton) findViewById(R.id.toggleButton);
         Toolbar tlBar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -53,6 +73,27 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("inResult", Integer.toString(resultCode));
+        Log.d("inResultCode", Integer.toString(requestCode));
+        Log.d("ActivityResultOk", Integer.toString(Activity.RESULT_OK));
+        //Log.d("data", data.getStringExtra("loginResult"));
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK) {
+
+
+//                Intent intent = new Intent(this, MainActivity.class);
+//                Log.d("StartMain","");
+//                startActivity(intent);
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+    }//onActivityResult
+
     /**
      * Sends help message on button press. Contacts are hard coded for now. "[War-ALERT]" is currently
      * text message tags. Sends two text message. The first includes the translated address the second
@@ -68,6 +109,20 @@ public class MainActivity extends AppCompatActivity {
         Log.i("Send SMS", "");
         //String phoneNum = phoneNumber.getText().toString();
         String[] phoneNum = {"2085300606", "4702633691"};
+//        MySQLiteHelper db = new MySQLiteHelper(this);
+//
+//        List<Contact> contacts = db.getAllContacts();
+//
+//
+//        String[] phoneNum = new String[contacts.size()];
+//
+//        int k = 0;
+//
+//        for(Contact contact: contacts)
+//        {
+//            phoneNum[k++] = contact.getPhone();
+//        }
+
         String address = getAddress(lat, longg);
         //String msg = txtMessage.getText().toString();
         String locMsg = "[War-ALERT]: Location is: " + address
@@ -103,7 +158,20 @@ public class MainActivity extends AppCompatActivity {
     protected void sendSafeSMSMessage() {
 
         //String phoneNum = phoneNumber.getText().toString();
-        String[] phoneNum = {"2085300606", "4702633691"};
+        MySQLiteHelper db = new MySQLiteHelper(this);
+
+        List<Contact> contacts = db.getAllContacts();
+
+
+        String[] phoneNum = new String[contacts.size()];
+
+        int k = 0;
+
+        for(Contact contact: contacts)
+        {
+            phoneNum[k++] = contact.getPhone();
+        }
+
         String locMsg = "[War-ALERT]: User is Safe";
 
         try {

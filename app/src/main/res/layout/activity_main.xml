@@ -27,7 +27,8 @@
         android:textColorHint="#ffffff"
         android:textSize="65sp"
         android:textStyle="bold"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
