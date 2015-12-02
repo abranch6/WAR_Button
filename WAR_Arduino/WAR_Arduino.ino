@@ -277,11 +277,11 @@ void sleep(void)
 ISR(PCINT1_vect)
 { 
   //set mode based on the button pressed
-  if(digitalRead(PCINT8) == LOW)
+  if(digitalRead(PCINT9) == LOW)
   {
     mode = BUTTON_PRESS;  
   }
-  else if(digitalRead(PCINT9) == LOW)
+  else if(digitalRead(PCINT8) == LOW)
   {
     mode = PAIR;
   }
