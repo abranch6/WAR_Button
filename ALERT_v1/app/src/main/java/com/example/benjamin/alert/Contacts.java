@@ -22,9 +22,9 @@ public class Contacts extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
-        MySQLiteHelper db = new MySQLiteHelper(this);
+        final MySQLiteHelper db = new MySQLiteHelper(this);
 
-        List<Contact> contacts = db.getAllContacts();
+        final List<Contact> contacts = db.getAllContacts();
 
         String[] contactsArray = new String[contacts.size()];
 
@@ -34,7 +34,7 @@ public class Contacts extends AppCompatActivity {
             contactsArray[i++] = contact.getName() + " - " + contact.getPhone();
         }
 
-        ArrayAdapter<String> contactsArrayAdapter = new ArrayAdapter<String>(this, simple_list_item_1, contactsArray);
+        final ArrayAdapter<String> contactsArrayAdapter = new ArrayAdapter<String>(this, simple_list_item_1, contactsArray);
 
         ListView contactLists = (ListView)findViewById(R.id.listView1);
 
@@ -47,16 +47,70 @@ public class Contacts extends AppCompatActivity {
                 String value = (String) adapter.getItemAtPosition(position);
                 Log.d("listItem", value);
 
-                ToggleButton delete = (ToggleButton) findViewById(R.id.addcontacts);
-                if (delete.isChecked()){
-                    Log.d("delete", "del");
+                if (value != null)
+                {
+                    String name;
+                    String phone;
+
+                    String[] split = value.split(" - ");
+                    try
+                    {
+                        name = split[0];
+                        phone = split[1];
+
+                        ToggleButton delete = (ToggleButton) findViewById(R.id.addcontacts);
+                        if (delete.isChecked()){
+
+                            int ID = getID(name,phone);
+                            Log.d("ID", Integer.toString(ID));
+                            if (ID != -1)
+                            {
+                                Contact delContact = new Contact(split[0], split[1]);
+                                delContact.setId(ID);
+                                Log.d("del", Integer.toString(ID));
+                                db.deleteContact(delContact);
+
+                                Intent intent = getIntent();
+                                finish();
+                                startActivity(intent);
+
+                            }
+
+                        }
+                    }
+                    catch (Exception e)
+                    {}
+//                    Log.d("split", split[0]);
+//                    Log.d("split", split[1]);
+
+
                 }
+
                 // assuming string and if you want to get the value on click of list item
                 // do what you intend to do on click of listview row
             }
         });
     }
 
+
+    private int getID(String name, String phone){
+
+        MySQLiteHelper db = new MySQLiteHelper(this);
+        List<Contact> contactList = db.getAllContacts();
+        Log.d("name", name);
+        Log.d("phone", phone);
+        for(Contact cnt:contactList)
+        {
+            Log.d("contName", cnt.getName());
+            Log.d("contPhone", cnt.getPhone());
+            if (name.equals(cnt.getName()) && phone.equals(cnt.getPhone()))
+            {
+                return cnt.getId();
+            }
+        }
+
+        return -1;
+    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event){
         if (keyCode == KeyEvent.KEYCODE_BACK) {

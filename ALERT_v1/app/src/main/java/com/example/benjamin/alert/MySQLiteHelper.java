@@ -177,6 +177,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                 KEY_ID + " = ?",
                 new String[]{String.valueOf(contact.getId())});
 
+
         // 3. close
         db.close();
 
