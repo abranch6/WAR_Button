@@ -10,4 +10,10 @@
     tools:showIn="@layout/activity_pair_device"
     tools:context="com.example.benjamin.alert.PairDevice">
 
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pair_device_list_view"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

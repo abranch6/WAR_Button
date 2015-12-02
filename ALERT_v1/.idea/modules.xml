@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ALERT_v1.iml" filepath="$PROJECT_DIR$/ALERT_v1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MelodySmart/MelodySmart.iml" filepath="$PROJECT_DIR$/MelodySmart/MelodySmart.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

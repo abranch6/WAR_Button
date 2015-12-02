@@ -1,13 +1,17 @@
 package com.example.benjamin.alert;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
@@ -20,6 +24,8 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.bluecreation.melodysmart.MelodySmartDevice;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -28,6 +34,8 @@ import java.util.Locale;
  */
 public class MainActivity extends AppCompatActivity {
 
+    public static final String PREFS_NAME = "SwearPairPrefs";
+
     protected ToggleButton safeHelpButton;
     protected LocationManager locationManager;
     protected LocationListener locationListener;
@@ -35,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //BLE stuff
+        initBLE();
 
         boolean flag = true;
 
@@ -278,5 +289,139 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-    
+
+
+
+
+    //////////////////////////////BLE Stuff/////////////////////////////////////////////
+    //This should all really run independent of the activity
+
+    static boolean scanning = false;
+    static boolean connected = false;
+
+    private MelodySmartDevice melodySmartDevice;
+    private SmartListener smartListener;
+    private DataServiceListener dataServiceListener;
+
+    private int mScanInterval = 5000;
+    private int mScanTime = 10000;
+    private Handler mScanHandler;
+
+    private void initBLE()
+    {
+        melodySmartDevice = MelodySmartDevice.getInstance();
+        melodySmartDevice.init(getApplicationContext());
+
+        smartListener = new SmartListener(melodySmartDevice, this);
+        dataServiceListener = new DataServiceListener(melodySmartDevice, this);
+
+        melodySmartDevice.registerListener(smartListener);
+        melodySmartDevice.getDataService().registerListener(dataServiceListener);
+
+        mScanHandler = new Handler();
+        setConnected(false);
+    }
+    public void setConnected(boolean c)
+    {
+        connected = c;
+        if(!connected)
+        {
+            startScanTaskDelay();
+        }
+        else
+        {
+            stopScanTask();
+        }
+    }
+
+    Runnable mScanTask = new Runnable() {
+        @Override
+        public void run() {
+            if(scanning) {
+                scanLeDevice(false);
+
+                if (!connected)
+                {
+                    mScanHandler.postDelayed(mScanTask, mScanInterval);
+                }
+            }
+            else
+            {
+                if (!connected)
+                {
+                    scanLeDevice(true);
+                    mScanHandler.postDelayed(mScanTask, mScanTime);
+                }
+            }
+
+        }
+    };
+    //starts the scanning task
+    public void startScanTaskDelay()
+    {
+        mScanHandler.postDelayed(mScanTask, mScanInterval);
+    }
+
+    //stops the scannning task
+    public void stopScanTask()
+    {
+        mScanHandler.removeCallbacks(mScanTask);
+        scanLeDevice(false);
+    }
+
+    //starts and stops the bluetooth scanning
+    private synchronized void scanLeDevice(final boolean enable) {
+        scanning = enable;
+        if (enable)
+        {
+            melodySmartDevice.startLeScan(mLeScanCallback);
+        }
+        else
+        {
+            melodySmartDevice.stopLeScan(mLeScanCallback);
+        }
+    }
+
+    // Device scan callback.
+    private final BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback()
+    {
+        @Override
+        public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord)
+        {
+            //connect to device if it has been seen already
+            SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
+
+            String deviceName = settings.getString("deviceName", "");
+            String deviceAddress = settings.getString("deviceAddress", "");
+
+            if(device != null && !deviceAddress.equals("") && deviceAddress.compareTo(device.getAddress().toString()) == 0 &&
+                    !deviceName.equals("") && deviceName.compareTo(device.getName().toString()) == 0) {
+                connectToDevice(deviceAddress, deviceName);
+            }
+        }
+    };
+
+    public void deviceButtonPressed()
+    {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                safeHelpButton.setChecked(true);
+            }
+        });
+
+    }
+
+    //connects to the device
+    protected void connectToDevice(String address, String name)
+    {
+        try
+        {
+            melodySmartDevice.connect(address);
+        }
+        catch (Exception e)
+        {
+            Log.d("ERROR",e.toString());
+        }
+    }
 }
