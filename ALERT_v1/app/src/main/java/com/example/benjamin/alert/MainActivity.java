@@ -415,6 +415,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 if (!safeHelpButton.isChecked()) {
                     safeHelpButton.setChecked(true);
+                    safeHelpButton.forceLayout();
                 }
             }
         });

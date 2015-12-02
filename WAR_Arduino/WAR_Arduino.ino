@@ -22,12 +22,15 @@
 
 SoftwareSerial mySerial(8, 9); // RX, TX
 
+//variables for reading from the bluetooth device
 char ble_buffer[BUFFER_SIZE];
 char newChar;
 char lastChar;
 int bufferLoc;
+
 char bleConnected;
-  
+
+//current mode of the device (WAIT, PAIR, BUTTON)  
 int mode;
 
 long wakeTime;
@@ -119,92 +122,113 @@ void setupBLE(void)
 
 void loop() 
 {
-  
-  //wait for BLE to connect to phone
-  //TODO: add timeout
-  readBLE();
-  if(bufferLoc >= 6 && memcmp(ble_buffer, "CON=OK", 6) == 0)
-  {
-    bleConnected = 1;
-     
-  }
-  
   //call function based on which button is pressed
   if(mode == PAIR)
   {
-    if(millis() - wakeTime > PAIR_TIMEOUT)
-    {
-      sleep();
-    }
     rearButtonPressed();
   }
   else if(mode == BUTTON_PRESS)
   {
-    if(millis() - wakeTime > BUTTON_TIMEOUT)
-    {
-      sleep();
-    }
     frontButtonPressed();
   }
+  sleep(); //back to sleep
 }
 
-//TODO: add timeout
 void frontButtonPressed(void) //called if the front button on the device is pressed
 {
-  if(bleConnected == 1)
+  char done = 0;
+  
+  while(done == 0)
   {
-    int wait_time = 1000;
-    char ack_recieved = 0;
-    
-    mySerial.flush();
-    digitalWrite(LED, HIGH);
-    
-    while(ack_recieved == 0) //resends command until ack is seen
+    //wait for BLE to connect to phone
+    if(bleConnected = 0)
     {
-      //send command
-      mySerial.write("SND BUTTON");
-      mySerial.write("\r");
-      
-      delay(wait_time);
-      
       readBLE();
-
-      if(bufferLoc >= 7 && memcmp(ble_buffer, "RCV=ACK", 7) == 0) //check for ack
+      if(bufferLoc >= 6 && memcmp(ble_buffer, "CON=OK", 6) == 0)
       {
-        ack_recieved = 1;
-       
+        bleConnected = 1;
       }
     }
-    sleep();
+    
+    
+    if(bleConnected == 1)
+    {
+      int wait_time = 1000;
+      char ack_recieved = 0;
+      
+      mySerial.flush();
+      digitalWrite(LED, HIGH);
+      
+      while(ack_recieved == 0 && millis() - wakeTime > BUTTON_TIMEOUT) //resends command until ack is seen or until timeout is reached
+      {
+        //send command
+        mySerial.write("SND BUTTON");
+        mySerial.write("\r");
+        
+        delay(wait_time);
+        
+        readBLE();
+  
+        if(bufferLoc >= 7 && memcmp(ble_buffer, "RCV=ACK", 7) == 0) //check for ack
+        {
+          ack_recieved = 1;
+         
+        }
+      }
+      done = 1;
+    }
+  
+    if(millis() - wakeTime > BUTTON_TIMEOUT) //sleep if timeout is reached
+    {
+      done = 1;
+    }
   }
 }
 
-//TODO: add timeout
 void rearButtonPressed(void) //called if the rear button on the device is pressed
 {
-  if(bleConnected == 1) //waits for a connection
+  char done = 0;
+  while(done == 0)
   {
-    int wait_time = 1000; //time to wait until check for response
-    char ack_recieved = 0;
-    
-    mySerial.flush();
-    digitalWrite(LED, HIGH);
-    
-    while(ack_recieved == 0) //send message until ack is recieved
+    //wait for BLE to connect to phone
+    if(bleConnected = 0)
     {
-      mySerial.write("SND PAIR"); 
-      mySerial.write("\r"); //send message
-      
-      delay(wait_time);
-      
-      readBLE(); //read in response, waiting for ack
-
-      if(bufferLoc >= 7 && memcmp(ble_buffer, "RCV=ACK", 7) == 0) //check for ack
+      readBLE();
+      if(bufferLoc >= 6 && memcmp(ble_buffer, "CON=OK", 6) == 0)
       {
-        ack_recieved = 1;
+        bleConnected = 1;
       }
     }
-    sleep();
+      
+    if(bleConnected == 1) //waits for a connection
+    {
+      int wait_time = 1000; //time to wait until check for response
+      char ack_recieved = 0;
+      
+      mySerial.flush();
+      digitalWrite(LED, HIGH);
+      
+      while(ack_recieved == 0 && millis() - wakeTime > PAIR_TIMEOUT) //send message until ack is recieved or until timeout is reached
+      {
+        mySerial.write("SND PAIR"); 
+        mySerial.write("\r"); //send message
+        
+        delay(wait_time);
+        
+        readBLE(); //read in response, waiting for ack
+  
+        if(bufferLoc >= 7 && memcmp(ble_buffer, "RCV=ACK", 7) == 0) //check for ack
+        {
+          ack_recieved = 1;
+        }
+      }
+      done = 1;
+    }
+    
+    if(millis() - wakeTime > PAIR_TIMEOUT) //sleep if timeout is reached
+    {
+      done = 1;
+    }
   }
 }
 
