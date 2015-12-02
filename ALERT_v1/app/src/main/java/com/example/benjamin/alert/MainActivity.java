@@ -311,20 +311,23 @@ public class MainActivity extends AppCompatActivity {
     private DataServiceListener dataServiceListener;
 
     private int mScanInterval = 5000;
-    private int mScanTime = 10000;
+    private int mScanTime = 60000;
     private Handler mScanHandler;
 
     private void initBLE()
     {
+        //init bluetooth
         melodySmartDevice = MelodySmartDevice.getInstance();
         melodySmartDevice.init(getApplicationContext());
 
+        //connect listeners
         smartListener = new SmartListener(melodySmartDevice, this);
         dataServiceListener = new DataServiceListener(melodySmartDevice, this);
 
         melodySmartDevice.registerListener(smartListener);
         melodySmartDevice.getDataService().registerListener(dataServiceListener);
 
+        //init and start scanning
         mScanHandler = new Handler();
         setConnected(false);
     }
