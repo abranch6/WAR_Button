@@ -405,10 +405,11 @@ public class MainActivity extends AppCompatActivity {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                safeHelpButton.setChecked(true);
+                if (!safeHelpButton.isChecked()) {
+                    safeHelpButton.setChecked(true);
+                }
             }
         });
-
     }
 
     //connects to the device
