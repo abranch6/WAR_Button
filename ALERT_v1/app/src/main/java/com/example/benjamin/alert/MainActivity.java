@@ -82,8 +82,9 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // logic when Help is needed
-                    sendHelpSMSMessage();
-
+                    boolean sent = sendHelpSMSMessage();
+                    if (!sent) {safeHelpButton.setChecked(false);}
+                    
                 } else {
                     // logic when button is SAFE
                     sendSafeSMSMessage();
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
      * text message tags. Sends two text message. The first includes the translated address the second
      * includes the physical long/lat.
      */
-    protected void sendHelpSMSMessage() {
+    protected boolean sendHelpSMSMessage() {
 
         // Location
         GPS gps = new GPS(this);
@@ -143,6 +144,11 @@ public class MainActivity extends AppCompatActivity {
         MySQLiteHelper db = new MySQLiteHelper(this);
 
         List<Contact> contacts = db.getAllContacts();
+
+        if (contacts.size() == 0){
+            Toast.makeText(getApplicationContext(), "No contacts saved. Text not sent", Toast.LENGTH_LONG).show();
+            return false;
+        }
 
 
         String[] phoneNum = new String[contacts.size()];
@@ -181,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
 
         }
+        return true;
     }
 
     /**
@@ -193,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
         List<Contact> contacts = db.getAllContacts();
 
+        if (contacts.size() == 0) {return;}
 
         String[] phoneNum = new String[contacts.size()];
 
