@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                     // logic when Help is needed
                     boolean sent = sendHelpSMSMessage();
                     if (!sent) {safeHelpButton.setChecked(false);}
-                    
+
                 } else {
                     // logic when button is SAFE
                     sendSafeSMSMessage();
