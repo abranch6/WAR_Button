@@ -24,7 +24,7 @@ public class Contacts extends AppCompatActivity {
 
         final MySQLiteHelper db = new MySQLiteHelper(this);
 
-        final List<Contact> contacts = db.getAllContacts();
+        List<Contact> contacts = db.getAllContacts();
 
         String[] contactsArray = new String[contacts.size()];
 
@@ -34,7 +34,7 @@ public class Contacts extends AppCompatActivity {
             contactsArray[i++] = contact.getName() + " - " + contact.getPhone();
         }
 
-        final ArrayAdapter<String> contactsArrayAdapter = new ArrayAdapter<String>(this, simple_list_item_1, contactsArray);
+        ArrayAdapter<String> contactsArrayAdapter = new ArrayAdapter<String>(this, simple_list_item_1, contactsArray);
 
         ListView contactLists = (ListView)findViewById(R.id.listView1);
 
@@ -47,24 +47,21 @@ public class Contacts extends AppCompatActivity {
                 String value = (String) adapter.getItemAtPosition(position);
                 Log.d("listItem", value);
 
-                if (value != null)
-                {
+                if (value != null) {
                     String name;
                     String phone;
 
                     String[] split = value.split(" - ");
-                    try
-                    {
+                    try {
                         name = split[0];
                         phone = split[1];
 
                         ToggleButton delete = (ToggleButton) findViewById(R.id.addcontacts);
-                        if (delete.isChecked()){
+                        if (delete.isChecked()) {
 
-                            int ID = getID(name,phone);
+                            int ID = getID(name, phone);
                             Log.d("ID", Integer.toString(ID));
-                            if (ID != -1)
-                            {
+                            if (ID != -1) {
                                 Contact delContact = new Contact(split[0], split[1]);
                                 delContact.setId(ID);
                                 Log.d("del", Integer.toString(ID));
@@ -77,9 +74,9 @@ public class Contacts extends AppCompatActivity {
                             }
 
                         }
+                    } catch (Exception e) {
+                        Log.d("Null","No name/phone");
                     }
-                    catch (Exception e)
-                    {}
 //                    Log.d("split", split[0]);
 //                    Log.d("split", split[1]);
 
