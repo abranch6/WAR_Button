@@ -6,8 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ToggleButton;
 
 import java.util.List;
 
@@ -38,6 +40,21 @@ public class Contacts extends AppCompatActivity {
 
         contactLists.setAdapter(contactsArrayAdapter);
 
+        contactLists.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View v, int position,
+                                    long arg3) {
+                String value = (String) adapter.getItemAtPosition(position);
+                Log.d("listItem", value);
+
+                ToggleButton delete = (ToggleButton) findViewById(R.id.addcontacts);
+                if (delete.isChecked()){
+                    Log.d("delete", "del");
+                }
+                // assuming string and if you want to get the value on click of list item
+                // do what you intend to do on click of listview row
+            }
+        });
     }
 
     @Override
@@ -61,4 +78,10 @@ public class Contacts extends AppCompatActivity {
         }
 
     }
+
+    public void edit(View view){
+        Log.d("Edit", "edit pressed");
+    }
+
+
 }

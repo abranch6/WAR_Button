@@ -46,7 +46,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginLeft="10dp" />
 
-    <Button
+    <ToggleButton
         style="?android:textAppearanceSmall"
         android:id="@+id/addcontacts"
         android:layout_width="50dp"
@@ -59,7 +59,10 @@
         android:textSize="15sp"
         android:layout_alignTop="@+id/button3"
         android:layout_toStartOf="@+id/button3"
-        android:layout_marginRight="15dp" />
+        android:layout_marginRight="15dp"
+        android:onClick="edit"
+        android:textOn="DELETE"
+        android:textOff="SAVE" />
 
     <Button
         style="?android:textAppearanceSmall"

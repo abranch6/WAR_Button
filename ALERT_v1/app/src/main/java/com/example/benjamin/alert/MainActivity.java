@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intlogin = new Intent(this, LoginActivity.class);
             startActivityForResult(intlogin, 1);
 
-
 //            String value = extras.getString("contactBack");
 //            if (value != "BACK"){
 //
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         List<Contact> contacts = db.getAllContacts();
 
-        db.deleteAll(contacts);
+        //db.deleteAll(contacts);
 
 //        Intent intlogin = new Intent(this, LoginActivity.class);
 //        startActivityForResult(intlogin, 1);
