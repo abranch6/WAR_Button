@@ -11,8 +11,8 @@
 
 #define BUFFER_SIZE (100)
 #define READ_TIMEOUT (2000)
-#define PAIR_TIMEOUT (60000)
-#define BUTTON_TIMEOUT (600000)
+#define PAIR_TIMEOUT (10000)
+#define BUTTON_TIMEOUT (10000)
 
 
 #define WAIT (0)
@@ -137,7 +137,9 @@ void loop()
 void frontButtonPressed(void) //called if the front button on the device is pressed
 {
   char done = 0;
-  
+  int wait_time = 1000;
+  char ack_recieved = 0;
+      
   while(done == 0)
   {
     //wait for BLE to connect to phone
@@ -147,33 +149,24 @@ void frontButtonPressed(void) //called if the front button on the device is pres
       if(bufferLoc >= 6 && memcmp(ble_buffer, "CON=OK", 6) == 0)
       {
         bleConnected = 1;
+        mySerial.flush();
       }
     }
     else
     {
-      int wait_time = 1000;
-      char ack_recieved = 0;
+      //send command
+      mySerial.write("SND BUTTON");
+      mySerial.write("\r");
       
-      mySerial.flush();
-      digitalWrite(LED, HIGH);
+      delay(wait_time);
       
-      while(ack_recieved == 0 && millis() - wakeTime > BUTTON_TIMEOUT) //resends command until ack is seen or until timeout is reached
+      readBLE();
+
+      if(bufferLoc >= 7 && memcmp(ble_buffer, "RCV=ACK", 7) == 0) //check for ack
       {
-        //send command
-        mySerial.write("SND BUTTON");
-        mySerial.write("\r");
-        
-        delay(wait_time);
-        
-        readBLE();
-  
-        if(bufferLoc >= 7 && memcmp(ble_buffer, "RCV=ACK", 7) == 0) //check for ack
-        {
-          ack_recieved = 1;
-         
-        }
+        ack_recieved = 1;
+        done = 1;  
       }
-      done = 1;
     }
   
     if(millis() - wakeTime > BUTTON_TIMEOUT) //sleep if timeout is reached
