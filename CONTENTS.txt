@@ -1,0 +1,4 @@
+ALERT_V1 - Android App the is used with the device
+PCB - the pcb layout for the device in KiCad
+Documentation - Contains some documentation about the deivce
+WAR_Arduino - The arduino code for the device.
