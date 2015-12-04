@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+/**
+ * Add Contacts page
+ */
 public class AddContactsLocation extends AppCompatActivity {
 
     protected Button addNewContactBtn;
@@ -32,6 +35,9 @@ public class AddContactsLocation extends AppCompatActivity {
 
     }
 
+    /**
+     * Goes to the add new contacts page
+     */
     private void addNewContact(){
         Log.d("newContact", "AddNewContact selected");
         Intent intent = new Intent(this, AddNewContactsForm.class);

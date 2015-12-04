@@ -15,6 +15,10 @@ import android.widget.ListView;
 
 import com.bluecreation.melodysmart.MelodySmartDevice;
 
+/**
+ * Activity to pair the device to the phone.  Works, but is not complete.
+ * Needs to be made more user friendly.
+ */
 public class PairDevice extends AppCompatActivity {
 
     private MelodySmartDevice melodySmartDevice;
@@ -51,6 +55,7 @@ public class PairDevice extends AppCompatActivity {
 
                 BLEDeviceListAdapter.ViewHolder viewHolder = (BLEDeviceListAdapter.ViewHolder) view.getTag();
 
+                //saves the device information in the preferences
                 SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
                 SharedPreferences.Editor editor = settings.edit();
 
@@ -66,6 +71,10 @@ public class PairDevice extends AppCompatActivity {
         melodySmartDevice.init(getApplicationContext());
     }
 
+    /**
+     * Starts and stops the scanning for BLE devices
+     * @param enable true to start, false to stop
+     */
     private synchronized void scanLeDevice(final boolean enable) {
         scanning = enable;
         if (enable)
@@ -79,7 +88,9 @@ public class PairDevice extends AppCompatActivity {
         invalidateOptionsMenu();
     }
 
-    // Device scan callback.
+    /**
+     * Callback when a device is found.  Adds the device to the list
+     */
     private final BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback()
     {
         @Override

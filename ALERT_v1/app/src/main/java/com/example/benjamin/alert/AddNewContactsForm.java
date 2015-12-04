@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
+/**
+ * Add contacts form
+ */
 public class AddNewContactsForm extends AppCompatActivity {
 
     @Override
@@ -16,6 +19,10 @@ public class AddNewContactsForm extends AppCompatActivity {
 
     }
 
+    /**
+     * Adds a new contact to the contact database
+     * @param view Button
+     */
     public void addContact(View view) {
         // Do something in response to button
 

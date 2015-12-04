@@ -6,6 +6,7 @@ import com.bluecreation.melodysmart.MelodySmartDevice;
 import com.bluecreation.melodysmart.MelodySmartListener;
 
 /**
+ * Listener for the BLE device.  Called when a device connects to the phone.
  * Created by andrew on 10/28/15.
  */
 public class SmartListener implements MelodySmartListener
@@ -25,6 +26,9 @@ public class SmartListener implements MelodySmartListener
         activity.setConnected(true);
     }
 
+    /**
+     * Called when a BLE device is connected to.
+     */
     @Override
     public void onDeviceDisconnected()
     {

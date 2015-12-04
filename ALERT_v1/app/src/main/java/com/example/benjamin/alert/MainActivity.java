@@ -53,23 +53,11 @@ public class MainActivity extends AppCompatActivity {
         if (extras == null) {
             Intent intlogin = new Intent(this, LoginActivity.class);
             startActivityForResult(intlogin, 1);
-
-//            String value = extras.getString("contactBack");
-//            if (value != "BACK"){
-//
-//            }
-//            Log.d("valuePassed", value);
-
         }
 
         MySQLiteHelper db = new MySQLiteHelper(this);
 
         List<Contact> contacts = db.getAllContacts();
-
-        //db.deleteAll(contacts);
-
-//        Intent intlogin = new Intent(this, LoginActivity.class);
-//        startActivityForResult(intlogin, 1);
 
         setContentView(R.layout.activity_main);
         safeHelpButton = (ToggleButton) findViewById(R.id.toggleButton);
@@ -138,13 +126,11 @@ public class MainActivity extends AppCompatActivity {
         double lat = gps.getLatitude();
         double longg = gps.getLongitude();
 
-        Log.i("Send SMS", "");
-        //String phoneNum = phoneNumber.getText().toString();
-        //String[] phoneNum = {"2085300606", "4702633691"};
         MySQLiteHelper db = new MySQLiteHelper(this);
 
         List<Contact> contacts = db.getAllContacts();
 
+        //if no contacts are added then no messages will be sent
         if (contacts.size() == 0){
             Toast.makeText(getApplicationContext(), "No contacts saved. Text not sent", Toast.LENGTH_LONG).show();
             return false;
@@ -155,13 +141,14 @@ public class MainActivity extends AppCompatActivity {
 
         int k = 0;
 
+        //retrieves all the phone numbers
         for(Contact contact: contacts)
         {
             phoneNum[k++] = contact.getPhone();
         }
 
+        //creates the message to be sent
         String address = getAddress(lat, longg);
-        //String msg = txtMessage.getText().toString();
         String locMsg = "[War-ALERT]: Location is: " + address
                 + System.getProperty("line.separator")
                 + " Latitude is: " + lat
@@ -173,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
         smsLoc.append(Uri.parse(locMsg));
 
         try {
+            //sends all the messages
             SmsManager smsMgm = SmsManager.getDefault();
             for (int i = 0; i < phoneNum.length; i++)
             {
@@ -206,14 +194,17 @@ public class MainActivity extends AppCompatActivity {
 
         int k = 0;
 
+        //gets all the phone numbers
         for(Contact contact: contacts)
         {
             phoneNum[k++] = contact.getPhone();
         }
 
+        //creates the message to be sent
         String locMsg = "[War-ALERT]: User is Safe";
 
         try {
+            //sends all the messages
             SmsManager smsMgm = SmsManager.getDefault();
             for (int i = 0; i < phoneNum.length; i++)
             {
@@ -314,6 +305,9 @@ public class MainActivity extends AppCompatActivity {
     private int mScanTime = 60000;
     private Handler mScanHandler;
 
+    /**
+     * Initalizes the objects needed for the BLE device
+     */
     private void initBLE()
     {
         //init bluetooth
@@ -331,6 +325,11 @@ public class MainActivity extends AppCompatActivity {
         mScanHandler = new Handler();
         setConnected(false);
     }
+
+    /**
+     * Sets the connected state of the device.  Stops scanning if a device connects.
+     * @param c state to change too
+     */
     public void setConnected(boolean c)
     {
         connected = c;
@@ -344,6 +343,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * periodic task that handles scanning
+     */
     Runnable mScanTask = new Runnable() {
         @Override
         public void run() {
@@ -366,20 +368,28 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
-    //starts the scanning task
+
+    /**
+     * starts the scanning task
+     */
     public void startScanTaskDelay()
     {
         mScanHandler.postDelayed(mScanTask, mScanInterval);
     }
 
-    //stops the scannning task
+    /**
+     * stops the scanning task
+     */
     public void stopScanTask()
     {
         mScanHandler.removeCallbacks(mScanTask);
         scanLeDevice(false);
     }
 
-    //starts and stops the bluetooth scanning
+    /**
+     * starts and stops the BLE scanning
+     * @param enable true to start scanning false to stop scanning
+     */
     private synchronized void scanLeDevice(final boolean enable) {
         scanning = enable;
         if (enable)
@@ -392,7 +402,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Device scan callback.
+    /**
+     * device scan callback.  Called when a device is found.
+     * Connects to the paired device if it is seen.
+     */
     private final BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback()
     {
         @Override
@@ -411,6 +424,9 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Programmatically presses the safe_help_button
+     */
     public void deviceButtonPressed()
     {
         this.runOnUiThread(new Runnable() {
@@ -424,7 +440,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //connects to the device
+    /**
+     * Connects to the device
+     * @param address Address of the device to connect to
+     * @param name Name of the device to connect to
+     */
     protected void connectToDevice(String address, String name)
     {
         try

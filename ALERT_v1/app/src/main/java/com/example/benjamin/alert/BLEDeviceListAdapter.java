@@ -65,6 +65,13 @@ public class BLEDeviceListAdapter extends BaseAdapter
         return i;
     }
 
+    /**
+     * Creates and initalizes the view for a entry in the list
+     * @param i
+     * @param view
+     * @param viewGroup
+     * @return
+     */
     @Override
     public View getView(int i, View view, ViewGroup viewGroup)
     {

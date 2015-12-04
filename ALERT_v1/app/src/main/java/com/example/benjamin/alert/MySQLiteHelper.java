@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Helper for database access for the contacts.
  * Created by Dhar on 11/30/15.
  */
 public class MySQLiteHelper extends SQLiteOpenHelper {
@@ -79,6 +80,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Gets a contact out of the database
+     * @param id ID of the contact to get
+     * @return
+     */
     public Contact getContact(int id) {
 
         // 1. get reference to readable DB
@@ -111,7 +117,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         return contact;
     }
 
-    // Get All Books
+    /**
+     * Gets all the contracts in the database
+     * @return List of contacts
+     */
     public List<Contact> getAllContacts() {
         List<Contact> contacts = new LinkedList<Contact>();
 
@@ -142,7 +151,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         return contacts;
     }
 
-    // Updating single book
+    /**
+     * Update a contact in the database
+     * @param contact Contract to update
+     * @return
+     */
     public int updateContact(Contact contact) {
 
         // 1. get reference to writable DB
@@ -166,7 +179,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     }
 
-    // Deleting single book
+    /**
+     * Delete a contact from the database
+     * @param contact contact to delete
+     */
     public void deleteContact(Contact contact) {
 
         // 1. get reference to writable DB
@@ -185,6 +201,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * Deletes a list of contacts from the database
+     * @param contacts List of contacts to delete
+     */
     public void deleteAll(List<Contact> contacts)
     {
         for(Contact contact: contacts)

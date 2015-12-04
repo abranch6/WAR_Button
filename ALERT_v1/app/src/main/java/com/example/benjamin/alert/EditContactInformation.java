@@ -3,6 +3,9 @@ package com.example.benjamin.alert;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+/**
+ * Activity to edit contact information.  Not complete.
+ */
 public class EditContactInformation extends AppCompatActivity {
 
     @Override

@@ -15,6 +15,9 @@ import java.util.List;
 
 import static android.R.layout.simple_list_item_1;
 
+/**
+ * Contacts activity.  Has a list of the contacts and the ability to add or delete them.
+ */
 public class Contacts extends AppCompatActivity {
 
     @Override
@@ -40,6 +43,7 @@ public class Contacts extends AppCompatActivity {
 
         contactLists.setAdapter(contactsArrayAdapter);
 
+        //listener for the list of contacts
         contactLists.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View v, int position,
@@ -57,6 +61,7 @@ public class Contacts extends AppCompatActivity {
                         phone = split[1];
 
                         ToggleButton delete = (ToggleButton) findViewById(R.id.addcontacts);
+                        //deletes the contacts if they are pressed
                         if (delete.isChecked()) {
 
                             int ID = getID(name, phone);
@@ -90,6 +95,12 @@ public class Contacts extends AppCompatActivity {
     }
 
 
+    /**
+     * Gets the ID of a contact
+     * @param name Name of the contact
+     * @param phone Phone number of the contact
+     * @return ID of the contact
+     */
     private int getID(String name, String phone){
 
         MySQLiteHelper db = new MySQLiteHelper(this);
@@ -108,6 +119,13 @@ public class Contacts extends AppCompatActivity {
 
         return -1;
     }
+
+    /**
+     * Back button keyDown
+     * @param keyCode
+     * @param event
+     * @return
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event){
         if (keyCode == KeyEvent.KEYCODE_BACK) {

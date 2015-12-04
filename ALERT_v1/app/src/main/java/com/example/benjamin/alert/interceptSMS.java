@@ -12,6 +12,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 /**
+ * Class that intercepts text messages that begin with [WAR-ALERT]
  * Created by Benjamin on 10/27/2015.
  */
 public class interceptSMS extends BroadcastReceiver{

@@ -19,7 +19,7 @@ public class ServiceComm extends Service {
     {
         super.onCreate();
 
-        //SMS event receiver
+ 0       //SMS event receiver
         mSMSreceiver = new interceptSMS();
         mIntentFilter = new IntentFilter();
         mIntentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");

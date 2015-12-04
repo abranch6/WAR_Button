@@ -1,6 +1,7 @@
 package com.example.benjamin.alert;
 
 /**
+ * Class to represent a contact
  * Created by Dhar on 11/30/15.
  */
 public class Contact {
