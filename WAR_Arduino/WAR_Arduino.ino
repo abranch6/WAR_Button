@@ -11,8 +11,8 @@
 
 #define BUFFER_SIZE (100)
 #define READ_TIMEOUT (2000)
-#define PAIR_TIMEOUT (10000)
-#define BUTTON_TIMEOUT (10000)
+#define PAIR_TIMEOUT (60000)
+#define BUTTON_TIMEOUT (600000)
 
 
 #define WAIT (0)
